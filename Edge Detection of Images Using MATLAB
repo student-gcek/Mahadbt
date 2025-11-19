@@ -1,0 +1,61 @@
+% METHOD I( Using Built in Functions)
+clc;
+clear;
+close all;
+
+I = imread('peppers.png');
+if size(I,3) == 3
+    I_gray = rgb2gray(I);
+else
+    I_gray = I;
+end
+figure, imshow(I_gray), title('Original Grayscale Image');
+
+edges_sobel = edge(I_gray, 'sobel');
+edges_prewitt = edge(I_gray, 'prewitt');
+edges_roberts = edge(I_gray, 'roberts');
+edges_laplacian = edge(I_gray, 'log');
+edges_canny = edge(I_gray, 'canny');
+
+figure;
+subplot(2,3,1), imshow(I_gray), title('Original');
+subplot(2,3,2), imshow(edges_sobel), title('Sobel');
+subplot(2,3,3), imshow(edges_prewitt), title('Prewitt');
+subplot(2,3,4), imshow(edges_roberts), title('Roberts');
+subplot(2,3,5), imshow(edges_laplacian), title('Laplacian (LoG)');
+subplot(2,3,6), imshow(edges_canny), title('Canny');
+
+% Method II(Manually)
+clc;
+clear;
+close all;
+
+I = imread('peppers.png');
+if size(I,3) == 3
+    I_gray = rgb2gray(I);
+else
+    I_gray = I;
+end
+
+Gx_sobel = [-1 0 1; -2 0 2; -1 0 1];
+Gy_sobel = [-1 -2 -1; 0 0 0; 1 2 1];
+edges_sobel = sqrt(conv2(double(I_gray), Gx_sobel,'same').^2 + conv2(double(I_gray), Gy_sobel,'same').^2);
+
+Gx_prewitt = [-1 0 1; -1 0 1; -1 0 1];
+Gy_prewitt = [-1 -1 -1; 0 0 0; 1 1 1];
+edges_prewitt = sqrt(conv2(double(I_gray), Gx_prewitt,'same').^2 + conv2(double(I_gray), Gy_prewitt,'same').^2);
+
+Gx_roberts = [1 0; 0 -1];
+Gy_roberts = [0 1; -1 0];
+edges_roberts = sqrt(conv2(double(I_gray), Gx_roberts,'same').^2 + conv2(double(I_gray), Gy_roberts,'same').^2);
+
+Laplacian_kernel = [0 1 0; 1 -4 1; 0 1 0];
+edges_laplacian = conv2(double(I_gray), Laplacian_kernel, 'same');
+edges_laplacian = mat2gray(edges_laplacian);
+
+figure;
+subplot(2,3,1), imshow(I_gray), title('Original Grayscale');
+subplot(2,3,2), imshow(uint8(edges_sobel)), title('Sobel Edge');
+subplot(2,3,3), imshow(uint8(edges_prewitt)), title('Prewitt Edge');
+subplot(2,3,4), imshow(uint8(edges_roberts)), title('Roberts Edge');
+subplot(2,3,5), imshow(edges_laplacian), title('Laplacian Edge');
