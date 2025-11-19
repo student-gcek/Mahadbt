@@ -1,0 +1,71 @@
+clc; clear; close all;
+
+filename = 'peppers.png';
+
+if ~isfile(filename)
+    [file, path] = uigetfile({'*.jpg;*.jpeg;*.png;*.bmp;*.tif;*.tiff', ...
+    'Image Files (*.jpg, *.jpeg, *.png, *.bmp, *.tif, *.tiff)'}, ...
+    'Select an image for Histogram Processing');
+
+    if isequal(file, 0)
+        error('No image selected. Exiting program.');
+    else
+        filename = fullfile(path, file);
+    end
+end
+
+try
+    I = imread(filename);
+catch ME
+    error('Error reading image file "%s": %s', filename, ME.message);
+end
+
+if size(I, 3) == 3
+    I = rgb2gray(I);
+end
+
+img_mean = mean2(I);
+img_var = var(double(I(:)));
+img_std = std(double(I(:)));
+
+fprintf('\nImage statistics:\n');
+fprintf('Mean intensity = %.2f\n', img_mean);
+fprintf('Variance = %.2f\n', img_var);
+fprintf('Standard deviation = %.2f\n\n', img_std);
+
+J = histeq(I);
+K = histeq(J);
+L = histeq(K);
+
+figure('Name', 'Histogram Processing', 'NumberTitle', 'off');
+
+subplot(3,4,1);
+imshow(I); title('Original Image');
+subplot(3,4,2);
+imhist(I); title('Original Histogram');
+subplot(3,4,3);
+imshow(J); title('Equalized Image (1st)');
+subplot(3,4,4);
+imhist(J); title('Histogram Equalized (1st)');
+subplot(3,4,5);
+imshow(K); title('Equalized Image (2nd)');
+subplot(3,4,6);
+imhist(K); title('Histogram Equalized (2nd)');
+subplot(3,4,7);
+imshow(L); title('Equalized Image (3rd)');
+subplot(3,4,8);
+imhist(L); title('Histogram Equalized (3rd)');
+
+pdf_original = imhist(I) / numel(I);
+cdf_original = cumsum(pdf_original);
+subplot(3,4,9);
+plot(pdf_original); grid on; title('PDF Original');
+subplot(3,4,10);
+plot(cdf_original); grid on; title('CDF Original');
+
+pdf_eq = imhist(J) / numel(J);
+cdf_eq = cumsum(pdf_eq);
+subplot(3,4,11);
+plot(pdf_eq); grid on; title('PDF Equalized (1st)');
+subplot(3,4,12);
+plot(cdf_eq); grid on; title('CDF Equalized (1st)');
