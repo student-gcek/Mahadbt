@@ -1,0 +1,18 @@
+clc; clear; close all;
+
+img = imread('peppers.png');
+gray_img = rgb2gray(img);
+resized_img = imresize(gray_img, [300 300]);
+cropped_img = imcrop(gray_img, [100 100 150 150]);
+rotated_img = imrotate(gray_img, 90);
+flip_h = flip(gray_img, 2);
+flip_v = flip(gray_img, 1);
+
+figure('Name','Basic Image Operations','NumberTitle','off');
+subplot(3,3,1), imshow(img), title('Original RGB');
+subplot(3,3,2), imshow(gray_img), title('Grayscale');
+subplot(3,3,3), imshow(resized_img), title('Resized (300x300)');
+subplot(3,3,4), imshow(cropped_img), title('Cropped Image');
+subplot(3,3,5), imshow(rotated_img), title('Rotated 90°');
+subplot(3,3,6), imshow(flip_h), title('Flipped Horizontal');
+subplot(3,3,7), imshow(flip_v), title('Flipped Vertical');
