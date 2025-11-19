@@ -1,0 +1,34 @@
+% Lab 1: Image Smoothing using Gaussian Filter
+clc;
+clear all;
+close all;
+
+I = checkerboard(20, 4, 4);
+figure, imshow(I), title('Original Checkerboard Image');
+
+sigma_values = [1, 2, 5];
+for i = 1:length(sigma_values)
+    H = fspecial('gaussian', [5 5], sigma_values(i));
+    I_smooth = conv2(I, H, 'same');
+    figure, imshow(I_smooth, []);
+    title(['Smoothed Image with Gaussian, \sigma = ', num2str(sigma_values(i))]);
+end
+
+% Lab 2: Checkerboard Convolution with Gaussian Filter 
+img = checkerboard(16, 4, 4);
+h = fspecial('gaussian', [15 15], 5);
+conv_result = conv2(img, h, 'same');
+
+figure;
+subplot(1,3,1);
+imshow(img, []);
+title('Original Checkerboard');
+
+subplot(1,3,2);
+imshow(h, []);
+title('Gaussian Filter');
+
+subplot(1,3,3);
+imshow(conv_result, []);
+title('Filtered (Smoothed) Image');
+
