@@ -1,0 +1,32 @@
+clc; clear; close all;
+
+img = imread('cameraman.tif');
+img = im2double(img);
+
+h = fspecial('average', [3 3]);
+
+conv_spatial = conv2(img, h, 'same');
+
+[M, N] = size(img);
+h_padded = zeros(M, N);
+h_padded(1:size(h,1), 1:size(h,2)) = h;
+
+IMG = fft2(img);
+H = fft2(h_padded);
+
+Y = IMG .* H;
+
+conv_freq = real(ifft2(Y));
+
+figure;
+subplot(1,3,1);
+imshow(img, []);
+title('Original Image');
+
+subplot(1,3,2);
+imshow(conv_spatial, []);
+title('Convolution (Spatial Domain)');
+
+subplot(1,3,3);
+imshow(conv_freq, []);
+title('Convolution (Frequency Domain)');
