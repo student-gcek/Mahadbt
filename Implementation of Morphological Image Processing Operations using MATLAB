@@ -1,0 +1,25 @@
+clc; clear; close all;
+
+I = imread('flower.png');
+
+if size(I, 3) == 3
+    I = rgb2gray(I);
+end
+
+BW = imbinarize(I);
+
+se = strel('disk', 3);
+
+eroded_img = imerode(BW, se);
+dilated_img = imdilate(BW, se);
+opened_img = imopen(BW, se);
+closed_img = imclose(BW, se);
+boundary_img = BW - eroded_img;
+
+figure;
+subplot(2,3,1); imshow(BW); title('Original Binary Image');
+subplot(2,3,2); imshow(eroded_img); title('Eroded Image');
+subplot(2,3,3); imshow(dilated_img); title('Dilated Image');
+subplot(2,3,4); imshow(opened_img); title('Opened Image');
+subplot(2,3,5); imshow(closed_img); title('Closed Image');
+subplot(2,3,6); imshow(boundary_img); title('Boundary Extraction');
