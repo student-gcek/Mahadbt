@@ -1,0 +1,30 @@
+clc; clear; close all;
+
+I = imread('cameraman.tif');
+I = im2double(I);
+
+neg = 1 - I;
+
+r1 = 0.2; r2 = 0.6;
+s1 = 0.0; s2 = 1.0;
+cs = (I - r1) * ((s2 - s1) / (r2 - r1)) + s1;
+cs(I < r1) = s1;
+cs(I > r2) = s2;
+
+c = 1 / log(1 + max(I(:)));
+log_trans = c * log(1 + I);
+
+gamma = 0.5;
+pow_law = I .^ gamma;
+
+figure;
+subplot(5,2,1), imshow(I), title('Original Image');
+subplot(5,2,2), imhist(I), title('Histogram');
+subplot(5,2,3), imshow(neg), title('Negative');
+subplot(5,2,4), imhist(neg), title('Histogram');
+subplot(5,2,5), imshow(cs), title('Contrast Stretching');
+subplot(5,2,6), imhist(cs), title('Histogram');
+subplot(5,2,7), imshow(log_trans), title('Log Transformation');
+subplot(5,2,8), imhist(log_trans), title('Histogram');
+subplot(5,2,9), imshow(pow_law), title(['Power-Law (\gamma=',num2str(gamma),')']);
+subplot(5,2,10), imhist(pow_law), title('Histogram');
