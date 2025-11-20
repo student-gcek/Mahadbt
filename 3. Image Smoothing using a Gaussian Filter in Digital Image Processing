@@ -4,14 +4,20 @@ clear all;
 close all;
 
 I = checkerboard(20, 4, 4);
-figure, imshow(I), title('Original Checkerboard Image');
 
 sigma_values = [1, 2, 5];
+
+figure;
+subplot(2,2,1);
+imshow(I);
+title('Original Checkerboard Image');
+
 for i = 1:length(sigma_values)
     H = fspecial('gaussian', [5 5], sigma_values(i));
     I_smooth = conv2(I, H, 'same');
-    figure, imshow(I_smooth, []);
-    title(['Smoothed Image with Gaussian, \sigma = ', num2str(sigma_values(i))]);
+    subplot(2,2,i+1);
+    imshow(I_smooth, []);
+    title(['Smoothed, \sigma = ', num2str(sigma_values(i))]);
 end
 
 % Lab 2: Checkerboard Convolution with Gaussian Filter 
